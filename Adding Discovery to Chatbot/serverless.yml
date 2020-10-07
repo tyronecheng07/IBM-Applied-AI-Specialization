@@ -1,0 +1,52 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: lab-4 # NOTE: update this with your service name
+
+# Remember to install project dependencies to register the provider plugin.
+# $ npm install
+provider:
+  name: openwhisk
+  runtime: nodejs:10
+
+custom:
+  package: lab4
+  discovery:
+    username: apikey
+    password: bL8g71JNBLlln750b_G1BxuQ1XOITdTB7CZS88fP0jNn
+    environmentId: dc6c5f6d-4a0f-493d-a49c-9be66b345913
+    collectionId: 046f53c1-a121-4cb2-bbb9-f88047f16175
+    url: https://api.eu-de.discovery.watson.cloud.ibm.com/instances/da95d861-9374-48c6-8ca2-1e6ab358bcbf
+    intent: course_recommendation # DO NOT CHANGE
+
+resources:
+  packages:
+    main:
+      name: ${self:custom.package}
+
+functions:
+  connectDiscovery:
+    handler: CourseAdvisor.connectDiscovery
+    name: ${self:custom.package}/connectDiscovery
+    parameters:
+      discoveryUsername: ${self:custom.discovery.username}
+      discoveryPassword: ${self:custom.discovery.password}
+      environmentId: ${self:custom.discovery.environmentId}
+      collectionId: ${self:custom.discovery.collectionId}
+      url: ${self:custom.discovery.url}
+      intent: ${self:custom.discovery.intent}
+
+# extend the framework using plugins listed here:
+# https://github.com/serverless/plugins
+plugins:
+  - serverless-openwhisk
